@@ -94,6 +94,6 @@ user_is_granted[permission] {
 	# `role` assigned an element of the user_roles for this user...
 	role := data.users[input.user].roles[i]
 
-    data.policies[j].role == role
+    	data.policies[j].role == role
 	permission := data.policies[j]
 }

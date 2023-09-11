@@ -43,6 +43,10 @@ allow {
 #	utils.hasPermission(input.matching_policy.grants, input.roles)
 #}
 
+allow {
+	glob.match("/account-management/anonymous", input.resource)
+}
+
 # Allow the action if the user is granted permission to perform the action.
 allow {
 	# Find permissions for the user.

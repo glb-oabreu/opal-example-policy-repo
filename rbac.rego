@@ -44,7 +44,7 @@ allow {
 #}
 
 allow {
-	glob.match("/account-management/anonymous", input.resource)
+	glob.match("/account-management/anonymous", [], input.resource)
 }
 
 # Allow the action if the user is granted permission to perform the action.

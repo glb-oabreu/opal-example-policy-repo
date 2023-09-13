@@ -56,7 +56,7 @@ allow {
 }
 
 allow {
-	re_match("/actuator/gateway/**", input.resource)
+	re_match("/actuator/gateway/*", input.resource)
 }
 
 # Allow the action if the user is granted permission to perform the action.

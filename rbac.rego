@@ -44,7 +44,10 @@ allow {
 #}
 
 allow {
-	re_match("/account-management/anonymous", input.resource)
+	any([re_match("/account-management/anonymous", input.resource),
+		re_match("/actuator/health", input.resource),
+		re_match("actuator/info", input.resource),
+		re_match("/actuator/gateway/**", input.resource)])
 }
 
 # Allow the action if the user is granted permission to perform the action.

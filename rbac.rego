@@ -72,6 +72,9 @@ token = {"payload": payload} {
 
 # Allow the action if the user is granted permission to perform the action.
 allow {
+	print("OLA MUNDO")
+	print("BEARER TOKEN = ", bearer_token)
+	print("TOKEN = ", token)
 	# Find permissions for the user.
 	some permission
 	user_is_granted[permission]

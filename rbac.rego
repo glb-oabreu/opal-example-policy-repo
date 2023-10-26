@@ -59,6 +59,17 @@ allow {
 	re_match("/actuator/gateway/*", input.resource)
 }
 
+
+# Helper JWT Functions
+bearer_token := t {
+ t := input.request.headers.authorization
+}
+
+# Decode the authorization token to get a role and permission
+token = {"payload": payload} {
+ [_, payload, _] := io.jwt.decode(bearer_token)
+}
+
 # Allow the action if the user is granted permission to perform the action.
 allow {
 	# Find permissions for the user.
@@ -66,12 +77,9 @@ allow {
 	user_is_granted[permission]
 
 	# Check if the permission permits the action.
-	input.action == permission.action
-	input.resource == permission.resource
+	input.request.method == permission.action
+	input.request.path == permission.resource
 
-	# unless user location is outside US
-	country := data.users[input.user].location.country
-	country == "US"
 }
 
 # user_is_admin is true if...
@@ -108,7 +116,7 @@ user_is_granted[permission] {
 	some i, j
 
 	# `role` assigned an element of the user_roles for this user...
-	role := data.users[input.user].roles[i]
+	role := data.users[payload.email].roles[i]
 
     	data.policies[j].role == role
 	permission := data.policies[j]

@@ -1,4 +1,4 @@
-package app.rbac
+package rbacpol
 
 import future.keywords.contains
 import future.keywords.if

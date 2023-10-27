@@ -1,50 +1,14 @@
-# Role-based Access Control (RBAC)
-# --------------------------------
-#
-# This example defines an RBAC model for a Pet Store API. The Pet Store API allows
-# users to look at pets, adopt them, update their stats, and so on. The policy
-# controls which users can perform actions on which resources. The policy implements
-# a classic Role-based Access Control model where users are assigned to roles and
-# roles are granted the ability to perform some action(s) on some type of resource.
-#
-# This example shows how to:
-#
-#	* Define an RBAC model in Rego that interprets role mappings represented in JSON.
-#	* Iterate/search across JSON data structures (e.g., role mappings)
-#
-# For more information see:
-#
-#	* Rego comparison to other systems: https://www.openpolicyagent.org/docs/latest/comparison-to-other-systems/
-#	* Rego Iteration: https://www.openpolicyagent.org/docs/latest/#iteration
-
 package app.rbac
 
-# import data.utils
+import future.keywords.contains
+import future.keywords.if
+import future.keywords.in
 
-# By default, deny requests
-default allow = false
-
-# Allow admins to do anything
-allow {
-	user_is_admin
-}
-
-# Allow bob to do anything
-#allow {
-#	input.user == "bob"
-#}
-
-# you can ignore this rule, it's simply here to create a dependency
-# to another rego policy file, so we can demonstate how to work with
-# an explicit manifest file (force order of policy loading).
-#allow {
-#	input.matching_policy.grants
-#	input.roles
-#	utils.hasPermission(input.matching_policy.grants, input.roles)
-#}
+# By default, deny requests.
+default allow := false
 
 allow {
-	re_match("/account-management/anonymous", input.resource)
+	re_match("/users/anonymous", input.resource)
 }
 
 allow {
@@ -59,68 +23,33 @@ allow {
 	re_match("/actuator/gateway/*", input.resource)
 }
 
-
-# Helper JWT Functions
-bearer_token := t {
- t := input.request.headers.authorization
-}
-
-# Decode the authorization token to get a role and permission
-token = {"payload": payload} {
- [_, payload, _] := io.jwt.decode(bearer_token)
-}
-
 # Allow the action if the user is granted permission to perform the action.
-allow {
-	print("OLA MUNDO")
-	print("BEARER TOKEN = ", bearer_token)
-	print("TOKEN = ", token)
-	# Find permissions for the user.
-	some permission
-	user_is_granted[permission]
-
-	# Check if the permission permits the action.
-	input.request.method == permission.action
-	input.request.path == permission.resource
-
+allow if {
+	some policy in user_policies
+    input.request.method == policy.action
+	input.request.path == policy.resource
 }
 
-# user_is_admin is true if...
-user_is_admin {
-	# for some `i`...
-	some i
-
-	# "admin" is the `i`-th element in the user->role mappings for the identified user.
-	data.users[input.user].roles[i] == "admin"
+my_users contains r if {
+	some usr in data.users
+    some r in usr.roles
 }
 
-# user_is_viewer is true if...
-user_is_viewer {
-	# for some `i`...
-	some i
-
-	# "viewer" is the `i`-th element in the user->role mappings for the identified user.
-	data.users[input.user].roles[i] == "viewer"
+user_policies contains policy if {
+	some role in data.users[token.preferred_username].roles 
+    some policy in data.policies
+    policy.role == role
 }
 
-# user_is_guest is true if...
-user_is_guest {
-	# for some `i`...
-	some i
-
-	# "guest" is the `i`-th element in the user->role mappings for the identified user.
-	data.users[input.user].roles[i] == "guest"
+token := payload if {
+	[_, payload, _] := io.jwt.decode(bearer_token)
 }
 
-
-# user_is_granted is a set of permissions for the user identified in the request.
-# The `permission` will be contained if the set `user_is_granted` for every...
-user_is_granted[permission] {
-	some i, j
-
-	# `role` assigned an element of the user_roles for this user...
-	role := data.users[payload.email].roles[i]
-
-    	data.policies[j].role == role
-	permission := data.policies[j]
+bearer_token := t if {
+	# Bearer tokens are contained inside of the HTTP Authorization header. This rule
+	# parses the header and extracts the Bearer token value. If no Bearer token is
+	# provided, the `bearer_token` value is undefined.
+	v := input.request.headers.Authorization
+	startswith(v, "Bearer ")
+	t := substring(v, count("Bearer "), -1)
 }

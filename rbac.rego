@@ -30,11 +30,6 @@ allow if {
 	input.request.path == policy.resource
 }
 
-my_users contains r if {
-	some usr in data.users
-	some r in usr.roles
-}
-
 user_policies contains policy if {
 	some role in data.users[token.preferred_username].roles 
 	some policy in data.policies

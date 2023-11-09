@@ -9,6 +9,10 @@ import future.keywords.in
 default allow := false
 
 allow {
+	re_match("/anything*", input.resource)
+}
+
+allow {
 	re_match("/users/anonymous", input.resource)
 }
 

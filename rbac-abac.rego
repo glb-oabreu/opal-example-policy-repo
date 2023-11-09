@@ -9,7 +9,7 @@ import future.keywords.in
 default allow := false
 
 allow {
-	re_match("/anything*", input.resource)
+	re_match("/anything*", input.request.path)
 }
 
 allow {

@@ -1,7 +1,7 @@
 package ccx.newrbac
 
-default allow := false
+default check_role := false
 
-allow {
+check_role {
 	regex.match("/anythingelse", input.request.path)
 }

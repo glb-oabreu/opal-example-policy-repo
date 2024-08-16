@@ -1,7 +1,7 @@
 package ccx.newabac
 
-default allow := false
+default check_attribute := false
 
-allow {
+check_attribute {
 	regex.match("/anything", input.request.path)
 }

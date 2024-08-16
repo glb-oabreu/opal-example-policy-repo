@@ -2,6 +2,13 @@ package ccx.allchecks
 
 default allow := false
 
+import data.ccx.newabac.check_attribute
+import data.ccx.newrbac.check_role
+
+
 allow {
-    regex.match("/anotherthing", input.request.path)
+    check_attribute
+}
+allow {
+    check_role
 }

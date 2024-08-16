@@ -11,3 +11,7 @@ allow {
 allow {
     check_role
 }
+
+allow {
+    regex.match("/anotherthing", input.request.path)
+}

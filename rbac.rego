@@ -8,19 +8,19 @@ import future.keywords.in
 default allow := false
 
 allow {
-	re_match("/users/anonymous", input.resource)
+	regex.match("/users/anonymous", input.resource)
 }
 
 allow {
-	re_match("/actuator/health", input.resource)
+	regex.match("/actuator/health", input.resource)
 }
 
 allow {
-	re_match("/actuator/info", input.resource)
+	regex.match("/actuator/info", input.resource)
 }
 
 allow {
-	re_match("/actuator/gateway/*", input.resource)
+	regex.match("/actuator/gateway/*", input.resource)
 }
 
 # Allow the action if the user is granted permission to perform the action.

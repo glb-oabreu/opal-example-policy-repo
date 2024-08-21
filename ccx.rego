@@ -1,3 +1,4 @@
+package envoy.http.jwt
 import rego.v1
 
 default allow := false

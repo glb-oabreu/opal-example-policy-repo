@@ -5,7 +5,7 @@ import data.utils.claims
 default rbac_check := false
 
 rbac_check if allowed_actions.action == "ALL"
-rbac_check if allowed_actions.action == input.request.method
+rbac_check if regex.match(input.request.method, allowed_actions.action)
 
 role_permissions[role_name] := p if {
 	some i

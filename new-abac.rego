@@ -1,4 +1,5 @@
 package ccx.newabac
+import rego.v1
 import data.utils.claims
 
 default validate_caseworker := false

@@ -6,7 +6,7 @@ import data.ccx.newrbac.rbac_check
 default allow := false
 
 allow := true if {
-  validate_caseworker
-} else := true if {
   rbac_check
+} else := true if {
+  validate_caseworker
 }

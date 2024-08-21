@@ -1,4 +1,6 @@
 package utils
+import rego.v1
+
 hasPermission(grants, roles) {
 	grants[_] == roles[_]
 }

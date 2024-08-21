@@ -1,10 +1,6 @@
 package utils
 import rego.v1
 
-hasPermission(grants, roles) {
-	grants[_] == roles[_]
-}
-
 claims := payload if {
 	[_, payload, _] := io.jwt.decode(bearer_token)
 }

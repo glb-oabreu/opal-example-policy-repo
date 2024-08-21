@@ -4,7 +4,6 @@ hasPermission(grants, roles) {
 }
 
 claims := payload if {
-	io.jwt.verify_hs256(bearer_token, "B41BD5F462719C6D6118E673A2389")
 	[_, payload, _] := io.jwt.decode(bearer_token)
 }
 

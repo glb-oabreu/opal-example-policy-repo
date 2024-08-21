@@ -1,4 +1,4 @@
-package envoy.http.jwt
+package ccx.allchecks
 import rego.v1
 
 default allow := false

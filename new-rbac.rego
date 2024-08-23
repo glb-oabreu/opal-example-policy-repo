@@ -1,5 +1,10 @@
 package ccx.newrbac
+
 import rego.v1
+
+import data.utils.claims
+import data.utils.split_content
+
 default rbac_check := false
 
 rbac_check if allowed_action

@@ -23,8 +23,7 @@ id_resource_permission := [{"1": permission, "2": exp} |
 	some resource in resources
 	contains(resource, "{")
 	replaced := regex.replace(resource, `{\w+}`, "([^/]+)")
-    exp := concat("",[replaced, "$"])
-	
+        exp := concat("",[replaced, "$"])
 	regex.match(exp, input.request.path)
 ]
 
